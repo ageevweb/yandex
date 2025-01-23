@@ -1,0 +1,119 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.banner {
+  width: 300px;
+  height: 600px;
+  position: relative;
+}
+
+.shelf {
+  position: relative;
+  width: 212px;
+  margin: 28px auto 0 auto;
+}
+
+.shelf__position {
+  position: absolute;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+  display: block;
+  z-index: 1;
+}
+
+.shelf__position.visible {
+  opacity: 1;
+}
+
+.shelf__position.hidden {
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+
+.cart {
+  position: absolute;
+  bottom: -103px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.cart__products {
+  position: absolute;
+  left: 78px;
+  bottom: 160px;
+  z-index: -1;
+}
+
+.cart__item {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.cart__item.visible {
+  opacity: 1;
+}
+
+/* Координаты товаров на полке */
+.shelf__position--1 {
+  left: 22px;
+  bottom: 310px;
+}
+
+.shelf__position--2 {
+  left: 64px;
+  bottom: 310px;
+}
+
+.shelf__position--3 {
+  left: 103px;
+  bottom: 310px;
+}
+
+.shelf__position--4 {
+  left: 158px;
+  bottom: 310px;
+}
+
+.shelf__position--5 {
+  left: 7px;
+  bottom: 211px;
+}
+
+.shelf__position--6 {
+  left: 58px;
+  bottom: 200px;
+}
+
+.shelf__position--7 {
+  left: 129px;
+  bottom: 209px;
+}
+
+.shelf__position--8 {
+  left: 13px;
+  bottom: 120px;
+}
+
+.shelf__position--9 {
+  left: 58px;
+  bottom: 119px;
+}
+
+.shelf__position--10 {
+  left: 115px;
+  bottom: 120px;
+}
+
+.shelf__position--11 {
+  left: 156px;
+  bottom: 114px;
+}
