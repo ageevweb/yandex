@@ -23,11 +23,11 @@ jobs:
         script: |
           echo "Deploying project to server"
 
-          # Создаем папку, если её нет
-          mkdir -p /var/www/yandex
+          # Удаляем старые файлы
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "rm -rf /var/www/yandex/*"
 
-          # Синхронизация файлов репозитория с сервером
-          rsync -avz --delete ./ /var/www/yandex
+          # Копируем файлы с помощью rsync
+          rsync -avz --delete -e "ssh -p 22" ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/yandex
 
           # Перезапускаем Nginx
-          sudo systemctl reload nginx
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "sudo systemctl reload nginx"
