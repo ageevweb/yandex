@@ -51,18 +51,21 @@ body {
   left: 78px;
   bottom: 160px;
   z-index: -1;
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
 }
 
 .cart__item {
   opacity: 0;
   transition: opacity 0.3s ease-in;
+  transform: scale(1.25);
 }
 
 .cart__item.visible {
   opacity: 1;
 }
 
-/* Координаты товаров на полке */
 .shelf__position--1 {
   left: 22px;
   bottom: 310px;
