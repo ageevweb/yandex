@@ -1,2 +1,2 @@
 Деплой:
-[text](https://yandex.ageevweb.ru/)
+[https://yandex.ageevweb.ru](https://yandex.ageevweb.ru/)
