@@ -15,9 +15,19 @@ const products = [
 const shelf = document.querySelector('.shelf');
 const cart = document.querySelector('.cart');
 const cartProducts = document.querySelector('.cart__products');
+const orderBtn = document.querySelector('.cart__order');
 
 let currentDraggedElement = null;
 const maxCartItems = 3;
+
+const updateOrderButtonVisibility = () => {
+  const currentCartItems = cartProducts.querySelectorAll('.cart__item').length;
+  if (currentCartItems === maxCartItems) {
+    orderBtn.classList.add('visible');
+  } else {
+    orderBtn.classList.remove('visible');
+  }
+};
 
 const renderProductsOnShelf = () => {
   let productsList = '';
@@ -38,27 +48,30 @@ const renderProductsOnShelf = () => {
 
   const rendered = document.querySelectorAll('.shelf__position');
 
-  // Плавное появление элементов с задержкой
   rendered.forEach((product, index) => {
     setTimeout(() => {
       product.classList.add('visible');
-    }, index * 300); // Задержка в 0.3 секунды для каждого элемента
+    }, index * 300);
   });
 
-  // Добавляем обработчики для мыши
   for (let product of rendered) {
     product.addEventListener('dragstart', (e) => {
+      product.classList.add('dragging');
       currentDraggedElement = e.target;
     });
 
-    // Обработчики для сенсорных экранов
+    product.addEventListener('dragend', (e) => {
+      product.classList.remove('dragging');
+    });
+
     product.addEventListener('touchstart', (e) => {
+      product.classList.add('dragging');
       currentDraggedElement = e.target;
-      e.target.style.position = 'absolute'; // Делаем элемент перемещаемым
     });
 
     product.addEventListener('touchmove', (e) => {
       const touch = e.touches[0];
+      currentDraggedElement.style.position = 'absolute';
       currentDraggedElement.style.left = `${touch.clientX - 50}px`;
       currentDraggedElement.style.top = `${touch.clientY - 50}px`;
     });
@@ -67,7 +80,6 @@ const renderProductsOnShelf = () => {
       const touch = e.changedTouches[0];
       const dropZone = cart.getBoundingClientRect();
 
-      // Проверяем, находится ли товар над корзиной
       if (
         touch.clientX > dropZone.left &&
         touch.clientX < dropZone.right &&
@@ -77,11 +89,11 @@ const renderProductsOnShelf = () => {
         handleDropOnCart(currentDraggedElement);
       }
 
-      // Сбрасываем стиль элемента
       currentDraggedElement.style.position = '';
       currentDraggedElement.style.left = '';
       currentDraggedElement.style.top = '';
 
+      currentDraggedElement.classList.remove('dragging');
       currentDraggedElement = null;
     });
   }
@@ -107,16 +119,13 @@ const handleDropOnCart = (draggedElement) => {
 
   const attr = +draggedElement.getAttribute('data-index');
 
-  // Плавное скрытие элемента на полке
   draggedElement.classList.add('hidden');
 
   setTimeout(() => {
-    // Проверяем, существует ли элемент перед удалением
     if (draggedElement && draggedElement.parentNode) {
-      draggedElement.remove(); // Удаляем элемент с полки после исчезновения
+      draggedElement.remove();
     }
 
-    // Создаём новый элемент для корзины
     const cartItem = document.createElement('div');
     cartItem.className = 'cart__item';
     cartItem.innerHTML = `
@@ -127,11 +136,12 @@ const handleDropOnCart = (draggedElement) => {
     `;
     cartProducts.appendChild(cartItem);
 
-    // Плавное появление элемента в корзине
     setTimeout(() => {
       cartItem.classList.add('visible');
     }, 10);
-  }, 300); // Задержка на 0.3 секунды для завершения анимации исчезновения
+
+    updateOrderButtonVisibility();
+  }, 300);
 };
 
 renderProductsOnShelf();
