@@ -26,12 +26,8 @@ jobs:
           # Создаем папку, если её нет
           mkdir -p /var/www/yandex
 
-          # Переходим в папку и удаляем старые файлы
-          cd /var/www/yandex
-          rm -rf *
-
-          # Загружаем новые файлы
-          tar -czf - . | ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'tar -xzf - -C /var/www/yandex'
+          # Синхронизация файлов репозитория с сервером
+          rsync -avz --delete ./ /var/www/yandex
 
           # Перезапускаем Nginx
           sudo systemctl reload nginx
