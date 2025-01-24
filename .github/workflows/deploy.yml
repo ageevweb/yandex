@@ -1,0 +1,37 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main # Деплой запускается при пуше в ветку main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.DEPLOY_HOST }} # IP-адрес сервера
+        username: ${{ secrets.DEPLOY_USER }} # Имя пользователя на сервере
+        key: ${{ secrets.DEPLOY_SSH_KEY }} # SSH-ключ
+        port: 22
+        script: |
+          echo "Deploying project to server"
+
+          # Создаем папку, если её нет
+          mkdir -p /var/www/yandex
+
+          # Переходим в папку и удаляем старые файлы
+          cd /var/www/yandex
+          rm -rf *
+
+          # Загружаем новые файлы
+          tar -czf - . | ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} 'tar -xzf - -C /var/www/yandex'
+
+          # Перезапускаем Nginx
+          sudo systemctl reload nginx
